@@ -1,6 +1,11 @@
 # GoGoGo
 Learning Go
 
+setup vscode for editing
+https://github.com/golang/vscode-go/blob/master/docs/debugging.md#configuration
+https://github.com/golang/vscode-go/issues/2053
+
+
 Copied as reference from https://adriann.github.io/programming_problems.html
 
  ## Elementary
