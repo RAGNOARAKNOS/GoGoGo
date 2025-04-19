@@ -29,3 +29,23 @@ A .ENV file located in the root is read to configure the below values, EnvVars c
 | GAMELIB_DB_PORT | Postgres port | 5432 |
 | GAMELIB_REST_PORT | Application REST endpoint port | 9999 |
 | GAMELIB_RUNTIME | sets deployment location, used for debug flags | dev |
+
+## Enums
+
+### Genres
+
+- Abstract Strategy - Games like Chess or Go, focusing on pure strategy without theme or narrative.
+- Cooperative - Players work together toward a common goal, e.g., Pandemic.
+- Deck-Building - Players build decks during play, like Dominion or Star Realms.
+- Economic - Centered on resource management and trade, e.g., Power Grid.
+- Eurogame - Strategy-focused with indirect player interaction, like Settlers of Catan.
+- Party - Light, social games for groups, e.g., Codenames or Telestrations.
+- Roll-and-Move - Movement based on dice rolls, like Monopoly.
+- Social Deduction - Involves hidden roles and bluffing, e.g., Werewolf or The Resistance.
+- Thematic - Strong narrative or theme, like Betrayal at House on the Hill.
+- Wargame - Simulate conflicts with detailed rules, e.g., Risk or Twilight Struggle.
+- Worker Placement - Assign workers to tasks, like Agricola or Lords of Waterdeep.
+- Area Control - Compete for territory, e.g., Ticket to Ride or Small World.
+- Puzzle - Focus on solving problems, like Sagrada.
+- Dexterity - Physical skill-based, e.g., Jenga or Flick 'em Up.
+- Legacy - Games with evolving rules and components, like Pandemic Legacy.
