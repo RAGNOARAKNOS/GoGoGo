@@ -49,3 +49,12 @@ A .ENV file located in the root is read to configure the below values, EnvVars c
 - Puzzle - Focus on solving problems, like Sagrada.
 - Dexterity - Physical skill-based, e.g., Jenga or Flick 'em Up.
 - Legacy - Games with evolving rules and components, like Pandemic Legacy.
+
+## GORM and JSON struct tags
+
+- EXPLAIN GORM AND JSON ANNOTATIONS
+https://betterstack.com/community/guides/scaling-go/json-in-go/
+
+wsl --shutdown
+optimize-VHD -Path .\ext4.vhdx -Mode full 
+(replace with all vdhx's)

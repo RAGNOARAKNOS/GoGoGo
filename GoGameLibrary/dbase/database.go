@@ -1,9 +1,10 @@
-package main
+package dbase
 
 import (
 	"fmt"
 	"log"
 
+	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/utils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -24,11 +25,11 @@ func enumExists(db *gorm.DB, enumName string) (bool, error) {
 func ConnectDatabase() {
 	databaseConnection := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		CFG.DBHost,
-		CFG.DBUser,
-		CFG.DBPassword,
-		CFG.DBName,
-		CFG.DBPort)
+		utils.CFG.DBHost,
+		utils.CFG.DBUser,
+		utils.CFG.DBPassword,
+		utils.CFG.DBName,
+		utils.CFG.DBPort)
 
 	db, err := gorm.Open(postgres.Open(databaseConnection), &gorm.Config{})
 	if err != nil {
@@ -68,6 +69,5 @@ func ConnectDatabase() {
 	DB = db
 
 	// Use automigrate to create the 'games' tables - if one doesn't already exist
-	DB.AutoMigrate(&Game{})
-	DB.AutoMigrate(&Boardgame{})
+	DB.AutoMigrate(&Game{}, &Publisher{}, &Mechanic{}, &Boardgame{})
 }

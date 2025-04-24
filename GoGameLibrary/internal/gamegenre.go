@@ -1,18 +1,9 @@
-package main
+package internal
 
 import (
 	"database/sql/driver"
 	"fmt"
-
-	"gorm.io/gorm"
 )
-
-type Game struct {
-	gorm.Model
-	Title     string `json:"title"`
-	Studio    string `json:"studio"`
-	Publisher string `json:"publisher"`
-}
 
 type GameGenre string
 
@@ -50,12 +41,4 @@ func (g *GameGenre) Scan(value interface{}) error {
 
 func (g GameGenre) Value() (driver.Value, error) {
 	return string(g), nil
-}
-
-type Boardgame struct {
-	gorm.Model
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Genre       GameGenre `gorm:"type:game_genre"`
-	Complexity  int       `json:"complexity"`
 }
