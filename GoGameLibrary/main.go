@@ -4,11 +4,22 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/api"
 	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/dbase"
+	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/internal"
 	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/utils"
 )
+
+// Global validator used for json parsing
+var validate *validator.Validate
+
+func init() {
+	//build validatorv10 json parser rules
+	validate = validator.New()
+	validate.RegisterValidation("gamegenre", internal.IsValidGameGenre)
+}
 
 func main() {
 	utils.GetAppConfig() // instantiate app variables
