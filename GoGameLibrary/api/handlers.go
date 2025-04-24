@@ -104,23 +104,23 @@ func DeleteGame(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func GetBoardGames(w http.ResponseWriter, r *http.Request) {
-	var games []dbase.Boardgame
-	result := dbase.DB.Preload("Publisher").Preload("Mechanics").Preload("Expansions").Find(&games)
+// func GetBoardGames(w http.ResponseWriter, r *http.Request) {
+// 	var games []dbase.Boardgame
+// 	result := dbase.DB.Preload("Publisher").Preload("Mechanics").Preload("Expansions").Find(&games)
 
-	if result.Error != nil { // handle database connection-style issues
-		http.Error(w, "FAILED to fetch board games", http.StatusInternalServerError)
-		return
-	}
+// 	if result.Error != nil { // handle database connection-style issues
+// 		http.Error(w, "FAILED to fetch board games", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	if result.RowsAffected == 0 { //If no games are found
-		json.NewEncoder(w).Encode([]dbase.Boardgame{}) //retutn empty array
-		return
-	}
+// 	if result.RowsAffected == 0 { //If no games are found
+// 		json.NewEncoder(w).Encode([]dbase.Boardgame{}) //retutn empty array
+// 		return
+// 	}
 
-	w.Header().Set("Content-Type", "application/json") // return JSON
-	json.NewEncoder(w).Encode(games)
-}
+// 	w.Header().Set("Content-Type", "application/json") // return JSON
+// 	json.NewEncoder(w).Encode(games)
+// }
 
 func GetBoardGame(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

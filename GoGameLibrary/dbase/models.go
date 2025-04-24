@@ -34,6 +34,7 @@ type Boardgame struct {
 	BestPlayers int                `json:"players_best"`
 	Playtime    int                `json:"playtime"`
 	Designer    string             `json:"designer"`
+	BGGURL      string             `json:"bgg_url"`
 	BGGRating   float32            `json:"bgg_rating"`
 	PublisherID int                `json:"publisher_id"`
 	Publisher   Publisher

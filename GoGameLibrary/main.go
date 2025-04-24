@@ -33,7 +33,8 @@ func main() {
 	router.HandleFunc("/games/{id}", api.UpdateGame).Methods("PUT")
 	router.HandleFunc("/games/{id}", api.DeleteGame).Methods("DELETE")
 
-	router.HandleFunc("/boardgames", api.GetBoardGames).Methods("GET")
+	router.HandleFunc("/boardgames", func(w http.ResponseWriter, r *http.Request) { api.GetBoardGames(w, r, dbase.DB) }).Methods("GET")
+	router.HandleFunc("/boardgames/{id}", api.CreateBoardGame).Methods("POST")
 
 	log.Println("Server listening on port 9999")
 	log.Fatal(http.ListenAndServe(":"+utils.CFG.RestPort, router))
