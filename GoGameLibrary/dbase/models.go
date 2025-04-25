@@ -18,11 +18,6 @@ type Publisher struct {
 	Games []Boardgame `json:"games,omitempty"`
 }
 
-type Mechanic struct {
-	gorm.Model
-	Name string
-}
-
 type Boardgame struct {
 	gorm.Model
 	Title       string             `json:"title" gorm:"not null"`
