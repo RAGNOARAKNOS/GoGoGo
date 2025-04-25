@@ -13,6 +13,66 @@ import (
 	"gorm.io/gorm"
 )
 
+func GetMechanicsHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+	var mechanics []dbase.Mechanic
+	result := db.Find(&mechanics)
+
+	if result.Error != nil {
+		http.Error(w, fmt.Sprintf("FAILED to fetch mechanics: %v", result.Error), http.StatusInternalServerError)
+		return
+	}
+
+	mechanicResponses := make([]dtos.MechanicResponse, len(mechanics))
+	for i, m := range mechanics {
+		mechanicResponses[i] = dtos.MechanicResponse{
+			ID:   m.ID,
+			Name: m.Name,
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(mechanicResponses)
+}
+
+func GetMechanicHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+	// 1 Get the Id from the request
+	vars := mux.Vars(r)
+	idString := vars["id"]
+	if idString == "" {
+		http.Error(w, "ID is required", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		http.Error(w, "Invalid ID format", http.StatusBadRequest)
+		return
+	}
+
+	// 2 Fetch from DBASE
+	var existingMechanic dbase.Mechanic
+	result := db.First(&existingMechanic, id)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			http.Error(w, "Mechanic not found", http.StatusNotFound)
+			return
+		}
+		http.Error(w, fmt.Sprintf("Failed to fetch mechanic: %v", result.Error), http.StatusInternalServerError)
+		return
+	}
+
+	// 3 Respond
+	response := dtos.MechanicResponse{
+		ID:   existingMechanic.ID,
+		Name: existingMechanic.Name,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
+}
+
 func CreateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.Validate, db *gorm.DB) {
 	var req dtos.NewMechanicRequest
 
@@ -139,28 +199,6 @@ func UpdateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
-}
-
-func GetMechanicsHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
-	var mechanics []dbase.Mechanic
-	result := db.Find(&mechanics)
-
-	if result.Error != nil {
-		http.Error(w, fmt.Sprintf("FAILED to fetch mechanics: %v", result.Error), http.StatusInternalServerError)
-		return
-	}
-
-	mechanicResponses := make([]dtos.MechanicResponse, len(mechanics))
-	for i, m := range mechanics {
-		mechanicResponses[i] = dtos.MechanicResponse{
-			ID:   m.ID,
-			Name: m.Name,
-		}
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(mechanicResponses)
 }
 
 func DeleteMechanicHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
