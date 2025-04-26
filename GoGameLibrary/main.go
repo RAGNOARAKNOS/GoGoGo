@@ -46,6 +46,11 @@ func main() {
 	router.HandleFunc("/mechanics/{id}", func(w http.ResponseWriter, r *http.Request) { api.DeleteMechanicHandler(w, r, dbase.DB) }).Methods("DELETE")
 
 	// Publisher API endpoints
+	router.HandleFunc("/publishers", func(w http.ResponseWriter, r *http.Request) { api.GetPublishersHandler(w, r, dbase.DB) }).Methods("GET")
+	router.HandleFunc("/publishers/{id}", func(w http.ResponseWriter, r *http.Request) { api.GetPublisherHandler(w, r, dbase.DB) }).Methods("GET")
+	router.HandleFunc("/publishers", func(w http.ResponseWriter, r *http.Request) { api.CreatePublisherHandler(w, r, validate, dbase.DB) }).Methods("POST")
+	router.HandleFunc("/publishers/{id}", func(w http.ResponseWriter, r *http.Request) { api.UpdatePublisherHandler(w, r, validate, dbase.DB) }).Methods("PATCH")
+	router.HandleFunc("/publishers/{id}", func(w http.ResponseWriter, r *http.Request) { api.DeletePublisherHandler(w, r, dbase.DB) }).Methods("DELETE")
 
 	// Start the server
 	log.Println("Server listening on port 9999")
