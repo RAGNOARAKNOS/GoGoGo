@@ -9,7 +9,6 @@ import (
 	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/api"
 	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/dbase"
 	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/internal"
-	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/utils"
 )
 
 // Global validator used for json parsing
@@ -22,7 +21,7 @@ func init() {
 }
 
 func main() {
-	utils.GetAppConfig() // instantiate app variables
+	internal.GetAppConfig() // instantiate app variables
 	dbase.ConnectDatabase()
 
 	router := mux.NewRouter()
@@ -54,5 +53,5 @@ func main() {
 
 	// Start the server
 	log.Println("Server listening on port 9999")
-	log.Fatal(http.ListenAndServe(":"+utils.CFG.RestPort, router))
+	log.Fatal(http.ListenAndServe(":"+internal.CFG.RestPort, router))
 }

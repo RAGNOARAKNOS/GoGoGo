@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/utils"
+	"github.com/ragnoaraknos/GoGoGo/GoGameLibrary/internal"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,11 +25,11 @@ func enumExists(db *gorm.DB, enumName string) (bool, error) {
 func ConnectDatabase() {
 	databaseConnection := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		utils.CFG.DBHost,
-		utils.CFG.DBUser,
-		utils.CFG.DBPassword,
-		utils.CFG.DBName,
-		utils.CFG.DBPort)
+		internal.CFG.DBHost,
+		internal.CFG.DBUser,
+		internal.CFG.DBPassword,
+		internal.CFG.DBName,
+		internal.CFG.DBPort)
 
 	db, err := gorm.Open(postgres.Open(databaseConnection), &gorm.Config{})
 	if err != nil {
