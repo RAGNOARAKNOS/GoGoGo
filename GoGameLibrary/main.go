@@ -1,8 +1,14 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -51,7 +57,38 @@ func main() {
 	router.HandleFunc("/publishers/{id}", func(w http.ResponseWriter, r *http.Request) { api.UpdatePublisherHandler(w, r, validate, dbase.DB) }).Methods("PATCH")
 	router.HandleFunc("/publishers/{id}", func(w http.ResponseWriter, r *http.Request) { api.DeletePublisherHandler(w, r, dbase.DB) }).Methods("DELETE")
 
-	// Start the server
-	log.Println("Server listening on port 9999")
-	log.Fatal(http.ListenAndServe(":"+internal.CFG.RestPort, router))
+	// Server configuration
+	srv := &http.Server{
+		Handler:      router,
+		Addr:         ":" + internal.CFG.RestPort,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	// Start the server goroutine
+	go func() {
+		log.Printf("Server listening on %s", srv.Addr)
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("FATAL: ListenAndServer Error: %v", err)
+		}
+	}()
+
+	// Graceful shutdown handling
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM) // ctrl+c or term failure signals closure
+
+	sig := <-quit
+	log.Printf("RECEIVED SIGNAL: %s. Shutting down server...", sig)
+
+	// Create a context with 30 sec timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Attempt graceful shutdown
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("FATAL: Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server Exiting.")
 }
