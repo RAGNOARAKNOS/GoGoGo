@@ -69,5 +69,5 @@ func ConnectDatabase() {
 	DB = db
 
 	// Use automigrate to create the 'games' tables - if one doesn't already exist
-	DB.AutoMigrate(&Game{}, &Publisher{}, &Mechanic{}, &Boardgame{})
+	DB.AutoMigrate(&Game{}, &Publisher{}, &Tag{}, &Boardgame{})
 }

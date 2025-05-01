@@ -1,14 +1,14 @@
 package dtos
 
-type NewMechanicRequest struct {
+type NewTagRequest struct {
 	Name string `json:"name" validate:"required"`
 }
 
-type UpdateMechanicRequest struct {
+type UpdateTagRequest struct {
 	Name string `json:"name,omitempty"`
 }
 
-type MechanicResponse struct {
+type TagResponse struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
 }

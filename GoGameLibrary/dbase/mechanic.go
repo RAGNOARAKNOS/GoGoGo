@@ -2,7 +2,7 @@ package dbase
 
 import "gorm.io/gorm"
 
-type Mechanic struct {
+type Tag struct {
 	gorm.Model
 	Name string
 }

@@ -37,12 +37,12 @@ func main() {
 	router.HandleFunc("/boardgames", func(w http.ResponseWriter, r *http.Request) { api.GetBoardGames(w, r, dbase.DB) }).Methods("GET")
 	router.HandleFunc("/boardgames/{id}", api.CreateBoardGame).Methods("POST")
 
-	// Mechanic API endpoints
-	router.HandleFunc("/mechanics", func(w http.ResponseWriter, r *http.Request) { api.GetMechanicsHandler(w, r, dbase.DB) }).Methods("GET")
-	router.HandleFunc("/mechanics/{id}", func(w http.ResponseWriter, r *http.Request) { api.GetMechanicHandler(w, r, dbase.DB) }).Methods("GET")
-	router.HandleFunc("/mechanics", func(w http.ResponseWriter, r *http.Request) { api.CreateMechanicHandler(w, r, validate, dbase.DB) }).Methods("POST")
-	router.HandleFunc("/mechanics/{id}", func(w http.ResponseWriter, r *http.Request) { api.UpdateMechanicHandler(w, r, validate, dbase.DB) }).Methods("PATCH")
-	router.HandleFunc("/mechanics/{id}", func(w http.ResponseWriter, r *http.Request) { api.DeleteMechanicHandler(w, r, dbase.DB) }).Methods("DELETE")
+	// Tag API endpoints
+	router.HandleFunc("/tags", func(w http.ResponseWriter, r *http.Request) { api.GetTagsHandler(w, r, dbase.DB) }).Methods("GET")
+	router.HandleFunc("/tags/{id}", func(w http.ResponseWriter, r *http.Request) { api.GetTagHandler(w, r, dbase.DB) }).Methods("GET")
+	router.HandleFunc("/tags", func(w http.ResponseWriter, r *http.Request) { api.CreateTagHandler(w, r, validate, dbase.DB) }).Methods("POST")
+	router.HandleFunc("/tags/{id}", func(w http.ResponseWriter, r *http.Request) { api.UpdateTagHandler(w, r, validate, dbase.DB) }).Methods("PATCH")
+	router.HandleFunc("/tags/{id}", func(w http.ResponseWriter, r *http.Request) { api.DeleteTagHandler(w, r, dbase.DB) }).Methods("DELETE")
 
 	// Publisher API endpoints
 	router.HandleFunc("/publishers", func(w http.ResponseWriter, r *http.Request) { api.GetPublishersHandler(w, r, dbase.DB) }).Methods("GET")

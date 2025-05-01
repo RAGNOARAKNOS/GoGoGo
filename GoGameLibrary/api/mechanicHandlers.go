@@ -13,18 +13,18 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetMechanicsHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
-	var mechanics []dbase.Mechanic
-	result := db.Find(&mechanics)
+func GetTagsHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+	var Tags []dbase.Tag
+	result := db.Find(&Tags)
 
 	if result.Error != nil {
-		http.Error(w, fmt.Sprintf("FAILED to fetch mechanics: %v", result.Error), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("FAILED to fetch Tags: %v", result.Error), http.StatusInternalServerError)
 		return
 	}
 
-	mechanicResponses := make([]dtos.MechanicResponse, len(mechanics))
-	for i, m := range mechanics {
-		mechanicResponses[i] = dtos.MechanicResponse{
+	TagResponses := make([]dtos.TagResponse, len(Tags))
+	for i, m := range Tags {
+		TagResponses[i] = dtos.TagResponse{
 			ID:   m.ID,
 			Name: m.Name,
 		}
@@ -32,10 +32,10 @@ func GetMechanicsHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(mechanicResponses)
+	json.NewEncoder(w).Encode(TagResponses)
 }
 
-func GetMechanicHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+func GetTagHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	// 1 Get the Id from the request
 	vars := mux.Vars(r)
 	idString := vars["id"]
@@ -51,21 +51,21 @@ func GetMechanicHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	}
 
 	// 2 Fetch from DBASE
-	var existingMechanic dbase.Mechanic
-	result := db.First(&existingMechanic, id)
+	var existingTag dbase.Tag
+	result := db.First(&existingTag, id)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
-			http.Error(w, "Mechanic not found", http.StatusNotFound)
+			http.Error(w, "Tag not found", http.StatusNotFound)
 			return
 		}
-		http.Error(w, fmt.Sprintf("Failed to fetch mechanic: %v", result.Error), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Failed to fetch Tag: %v", result.Error), http.StatusInternalServerError)
 		return
 	}
 
 	// 3 Respond
-	response := dtos.MechanicResponse{
-		ID:   existingMechanic.ID,
-		Name: existingMechanic.Name,
+	response := dtos.TagResponse{
+		ID:   existingTag.ID,
+		Name: existingTag.Name,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -73,8 +73,8 @@ func GetMechanicHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func CreateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.Validate, db *gorm.DB) {
-	var req dtos.NewMechanicRequest
+func CreateTagHandler(w http.ResponseWriter, r *http.Request, v *validator.Validate, db *gorm.DB) {
+	var req dtos.NewTagRequest
 
 	// 1 Decode the JSON
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -102,19 +102,19 @@ func CreateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.
 	}
 
 	// 3 Create new DBASE record
-	mechanic := dbase.Mechanic{
+	Tag := dbase.Tag{
 		Name: req.Name,
 	}
-	result := db.Create(&mechanic)
+	result := db.Create(&Tag)
 	if result.Error != nil {
-		http.Error(w, fmt.Sprintf("FAILED to create mechanic: %v", result.Error), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("FAILED to create Tag: %v", result.Error), http.StatusInternalServerError)
 		return
 	}
 
 	// 4 Map GORM struct to DTO struct
-	response := dtos.MechanicResponse{
-		ID:   mechanic.ID,
-		Name: mechanic.Name,
+	response := dtos.TagResponse{
+		ID:   Tag.ID,
+		Name: Tag.Name,
 	}
 
 	// 5 Send success response
@@ -123,9 +123,9 @@ func CreateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.
 	json.NewEncoder(w).Encode(response)
 }
 
-func UpdateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.Validate, db *gorm.DB) {
+func UpdateTagHandler(w http.ResponseWriter, r *http.Request, v *validator.Validate, db *gorm.DB) {
 	// 1 Decode the JSON request into DTO struct
-	var req dtos.UpdateMechanicRequest
+	var req dtos.UpdateTagRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "INVALID request body", http.StatusBadRequest)
 		return
@@ -165,34 +165,34 @@ func UpdateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.
 		return
 	}
 
-	// 4 Fetch the existing mechanic from the dbase
-	var existingMechanic dbase.Mechanic
-	result := db.First(&existingMechanic, id)
+	// 4 Fetch the existing Tag from the dbase
+	var existingTag dbase.Tag
+	result := db.First(&existingTag, id)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
-			http.Error(w, "Mechanic not found", http.StatusNotFound)
+			http.Error(w, "Tag not found", http.StatusNotFound)
 			return
 		}
-		http.Error(w, fmt.Sprintf("Failed to fetch mechanic: %v", result.Error), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Failed to fetch Tag: %v", result.Error), http.StatusInternalServerError)
 		return
 	}
 
 	// 5 Update the fields
 	if req.Name != "" {
-		existingMechanic.Name = req.Name
+		existingTag.Name = req.Name
 	}
 
 	// 6 Update the record in dbase
-	result = db.Save(&existingMechanic)
+	result = db.Save(&existingTag)
 	if result.Error != nil {
-		http.Error(w, fmt.Sprintf("Failed to update mechanic: %v", result.Error), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Failed to update Tag: %v", result.Error), http.StatusInternalServerError)
 		return
 	}
 
 	// 7 Map GORM struct to DTO struct
-	response := dtos.MechanicResponse{
-		ID:   existingMechanic.ID,
-		Name: existingMechanic.Name,
+	response := dtos.TagResponse{
+		ID:   existingTag.ID,
+		Name: existingTag.Name,
 	}
 
 	// 8 Send Success response
@@ -201,7 +201,7 @@ func UpdateMechanicHandler(w http.ResponseWriter, r *http.Request, v *validator.
 	json.NewEncoder(w).Encode(response)
 }
 
-func DeleteMechanicHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
+func DeleteTagHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	// 1 Get the ID from request
 	vars := mux.Vars(r)
 	idString := vars["id"]
@@ -215,22 +215,22 @@ func DeleteMechanicHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) 
 		return
 	}
 
-	// 2 Fetch the mechanic from the database
-	var mechanic dbase.Mechanic
-	result := db.First(&mechanic, id)
+	// 2 Fetch the Tag from the database
+	var Tag dbase.Tag
+	result := db.First(&Tag, id)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
-			http.Error(w, "Mechanic not found", http.StatusNotFound)
+			http.Error(w, "Tag not found", http.StatusNotFound)
 			return
 		}
-		http.Error(w, fmt.Sprintf("FAILED to fetch mechanic: %v", result.Error), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("FAILED to fetch Tag: %v", result.Error), http.StatusInternalServerError)
 		return
 	}
 
 	// 3 Delete the record from the database
-	result = db.Delete(&mechanic)
+	result = db.Delete(&Tag)
 	if result.Error != nil {
-		http.Error(w, fmt.Sprintf("FAILED to delete mechanic: %v", result.Error), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("FAILED to delete Tag: %v", result.Error), http.StatusInternalServerError)
 		return
 	}
 
