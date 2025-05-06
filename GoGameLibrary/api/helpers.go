@@ -7,9 +7,11 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
 // Extract the ID from the HTTP request, returns true if error occurs
@@ -111,4 +113,34 @@ func handleValidationErrors(w http.ResponseWriter, err error) {
 	//Handle non-validation errors (e.g. JSON decode issues)
 	log.Printf("ERROR: Bad Request (non-validation): %v", err)
 	respondError(w, http.StatusBadRequest, "Invalid request payload: "+err.Error())
+}
+
+// Checks for common GORM errors and maps them to HTTP status codes
+func handleGormError(w http.ResponseWriter, err error, context string) bool {
+	if err == nil {
+		return false // no error
+	}
+
+	log.Printf("GORM Error (%s): %v", context, err) // Log the specific GORM error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		respondError(w, http.StatusNotFound, fmt.Sprintf("%s not found", context))
+		return true
+	}
+
+	// Check for postgres' unique constraint violation
+	if strings.Contains(err.Error(), "duplicate key value violates unique constraint") || errors.Is(err, gorm.ErrDuplicatedKey) {
+		respondError(w, http.StatusConflict, fmt.Sprintf("%s conflict: value already exists", context))
+		return true
+	}
+
+	// Check for postgres' foreign key constrain violoation
+	if strings.Contains(err.Error(), "violates foreign key constraint") {
+		respondError(w, http.StatusBadRequest, fmt.Sprintf("Invalid reference in %s: related entity not found", context))
+		return true
+	}
+
+	// If uncaught ASSUME an internal server error
+	respondError(w, http.StatusInternalServerError, fmt.Sprintf("Database error during %s operation", context))
+	return true
 }

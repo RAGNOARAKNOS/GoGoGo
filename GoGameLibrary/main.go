@@ -41,7 +41,7 @@ func main() {
 
 	// Board Game API endpoints
 	router.HandleFunc("/boardgames", func(w http.ResponseWriter, r *http.Request) { api.GetBoardGames(w, r, dbase.DB) }).Methods("GET")
-	router.HandleFunc("/boardgames/{id}", api.CreateBoardGame).Methods("POST")
+	router.HandleFunc("/boardgames", func(w http.ResponseWriter, r *http.Request) { api.CreateBoardgameHandler(w, r, validate, dbase.DB) }).Methods("POST")
 
 	// Tag API endpoints
 	router.HandleFunc("/tags", func(w http.ResponseWriter, r *http.Request) { api.GetTagsHandler(w, r, dbase.DB) }).Methods("GET")

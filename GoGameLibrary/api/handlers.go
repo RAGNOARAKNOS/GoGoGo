@@ -140,9 +140,6 @@ func GetBoardGame(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(game)
 }
 
-func CreateBoardGame(w http.ResponseWriter, r *http.Request) {
-}
-
 // sendErrorResponse sends a JSON error response
 func sendErrorResponse(w http.ResponseWriter, statusCode int, message string) {
 	w.Header().Set("Content-Type", "application/json")

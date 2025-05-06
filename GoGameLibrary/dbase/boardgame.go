@@ -19,9 +19,9 @@ type Boardgame struct {
 	MaxPlayers  int
 	BestPlayers int
 	// Provenance
-	Designer  string
-	BGGURL    string
-	BGGRating float32
+	Designer string
+	//BGGURL    string
+	//BGGRating float32
 	// Relationship: A Boardgame (optionally) belongs to one Publisher (1-1)
 	PublisherID *uint      `gorm:"not null; index"`        // FK to Publisher (nullable/optional)
 	Publisher   *Publisher `gorm:"foreignKey:PublisherID"` // 1-1 to Publisher (nullable optional)

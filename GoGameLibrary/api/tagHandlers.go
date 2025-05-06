@@ -237,3 +237,23 @@ func DeleteTagHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	// 4 Send the success response
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func mapTagToResponse(tag *dbase.Tag) dtos.TagResponse {
+	if tag == nil {
+		return dtos.TagResponse{}
+	}
+	return dtos.TagResponse{
+		ID:   tag.ID,
+		Name: tag.Name,
+	}
+}
+
+func mapTagsToResponse(tags []*dbase.Tag) []dtos.TagResponse {
+	resp := make([]dtos.TagResponse, 0, len(tags))
+	for _, t := range tags {
+		if t != nil {
+			resp = append(resp, mapTagToResponse(t))
+		}
+	}
+	return resp
+}

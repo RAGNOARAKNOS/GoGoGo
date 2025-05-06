@@ -1,14 +1,12 @@
 package dtos
 
-import "github.com/ragnoaraknos/GoGoGo/GoGameLibrary/internal"
-
 type NewBoardgameRequest struct {
 	Title        string `json:"title" validate:"required"`
 	Description  string `json:"description"`
 	ImageURL     string `json:"image_url" validate:"url"`
 	Complexity   int    `json:"complexity" validate:"gte=0,lte=10"`
 	Learnability int    `json:"learnability" validate:"gte=0,lte=10"`
-	Playtime     int    `json:"playtime" validate:"required,gte=1"`
+	Playtime     int    `json:"playtime" validate:"gte=1"`
 	Setuptime    int    `json:"setuptime"`
 	MinPlayers   int    `json:"players_min" validate:"gte=1,lte=99"`
 	MaxPlayers   int    `json:"players_max" validate:"gte=1,lte=99"`
@@ -31,18 +29,26 @@ type UpdateBoardgameRequest struct {
 }
 
 type BoardgameResponse struct {
-	ID           uint               `json:"id"`
-	Title        string             `json:"title"`
-	Description  string             `json:"description"`
-	Genre        internal.GameGenre `json:"genre"`
-	Complexity   int                `json:"complexity"`
-	Learnability int                `json:"learnability"`
-	MinPlayers   int                `json:"players_min"`
-	MaxPlayers   int                `json:"players_max"`
-	BestPlayers  int                `json:"players_best"`
-	Playtime     int                `json:"playtime"`
-	Designer     string             `json:"designer"`
-	PublisherID  int                `json:"publisher_id"`
-	ImageURL     string             `json:"image_url"`
-	ParentID     int                `json:"parentid"`
+	ID          uint   `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	//Genre        internal.GameGenre `json:"genre"`
+	Complexity   int                      `json:"complexity"`
+	Learnability int                      `json:"learnability"`
+	MinPlayers   int                      `json:"players_min"`
+	MaxPlayers   int                      `json:"players_max"`
+	BestPlayers  int                      `json:"players_best"`
+	Playtime     int                      `json:"playtime"`
+	Designer     string                   `json:"designer"`
+	PublisherID  uint                     `json:"publisher_id"`
+	ImageURL     string                   `json:"image_url"`
+	ParentID     int                      `json:"parentid"`
+	Genres       []TagResponse            `json:"genres,omitempty"`
+	Mechanics    []TagResponse            `json:"mechanics,omitempty"`
+	Expansions   []BoardgameTerseResponse `json:"expansions,omitempty"`
+}
+
+type BoardgameTerseResponse struct {
+	ID    uint   `json:"id"`
+	Title string `json:"string"`
 }
