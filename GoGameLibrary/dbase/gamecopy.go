@@ -4,7 +4,9 @@ import "gorm.io/gorm"
 
 type Gamecopy struct {
 	gorm.Model
-	Game      Boardgame
-	Condition *int
-	Love      *int
+	BoardGameID uint       `gorm:"not null;index"`
+	Game        *Boardgame `gorm:"foreignKey:BoardGameID"`
+	Condition   int
+	Love        int
+	Notes       string `gorm:"type:text"`
 }

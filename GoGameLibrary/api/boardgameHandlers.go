@@ -28,16 +28,16 @@ func GetBoardGames(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 			ID:          bg.ID,
 			Title:       bg.Title,
 			Description: bg.Description,
-			Genre:       bg.Genre,
+			//Genre:       bg.Genre,
 			Complexity:  bg.Complexity,
 			MinPlayers:  bg.MinPlayers,
 			MaxPlayers:  bg.MaxPlayers,
 			BestPlayers: bg.BestPlayers,
 			Playtime:    bg.Playtime,
 			Designer:    bg.Designer,
-			PublisherID: bg.PublisherID,
-			ImageURL:    bg.ImageURL,
-			ParentID:    int(*bg.ParentID),
+			//PublisherID: bg.PublisherID,
+			ImageURL: bg.ImageURL,
+			ParentID: int(*bg.BasegameID),
 		}
 	}
 
@@ -79,7 +79,7 @@ func CreateBoardgameHandler(w http.ResponseWriter, r *http.Request, v *validator
 	game := dbase.Boardgame{
 		Title:       req.Title,
 		Description: req.Description,
-		Genre:       req.Genre,
+		//Genre:       req.Genre,
 		Complexity:  req.Complexity,
 		MinPlayers:  req.MinPlayers,
 		MaxPlayers:  req.MaxPlayers,

@@ -4,6 +4,6 @@ import "gorm.io/gorm"
 
 type Publisher struct {
 	gorm.Model
-	Name string
-	//Games []Boardgame `gorm:"foreignKey:PublisherID"`
+	Name  string
+	Games []Boardgame `gorm:"foreignKey:PublisherID"`
 }
